@@ -588,6 +588,15 @@ func DefineCreateFlags(cmd *cobra.Command, cf *entities.ContainerCreateOptions, 
 			"replace", false,
 			`If a container with the same name exists, replace it`,
 		)
+
+		decryptionKeysFlagName := "decryption-key"
+		createFlags.StringSliceVar(
+			&cf.DecryptionKeys,
+			decryptionKeysFlagName, []string{},
+			"key needed to decrypt the image",
+		)
+		_ = cmd.RegisterFlagCompletionFunc(annotationFlagName, completion.AutocompleteNone)
+
 	}
 	if isInfra || (!clone && !isInfra) { // infra container flags, create should also pick these up
 		shmSizeFlagName := "shm-size"

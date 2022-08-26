@@ -237,6 +237,7 @@ func (ir *ImageEngine) Pull(ctx context.Context, rawImage string, options entiti
 	pullOptions.Variant = options.Variant
 	pullOptions.SignaturePolicyPath = options.SignaturePolicy
 	pullOptions.InsecureSkipTLSVerify = options.SkipTLSVerify
+	pullOptions.OciDecryptConfig = options.OciDecryptConfig
 
 	if !options.Quiet {
 		pullOptions.Writer = os.Stderr
@@ -310,6 +311,8 @@ func (ir *ImageEngine) Push(ctx context.Context, source string, destination stri
 	pushOptions.SignSigstorePrivateKeyPassphrase = options.SignSigstorePrivateKeyPassphrase
 	pushOptions.InsecureSkipTLSVerify = options.SkipTLSVerify
 	pushOptions.Writer = options.Writer
+	pushOptions.OciEncryptConfig = options.OciEncryptConfig
+	pushOptions.OciEncryptLayers = options.OciEncryptLayers
 
 	compressionFormat := options.CompressionFormat
 	if compressionFormat == "" {
