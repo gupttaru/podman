@@ -279,7 +279,6 @@ type ContainerCreateOptions struct {
 	ChrootDirs        []string
 	IsInfra           bool
 	IsClone           bool
-	DecryptionKeys    []string
 
 	Net *NetOptions `json:"net,omitempty"`
 

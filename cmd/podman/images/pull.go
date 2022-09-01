@@ -23,7 +23,6 @@ type pullOptionsWrapper struct {
 	entities.ImagePullOptions
 	TLSVerifyCLI   bool // CLI only
 	CredentialsCLI string
-	DecryptionKeys []string
 }
 
 var (
@@ -108,9 +107,6 @@ func pullFlags(cmd *cobra.Command) {
 	flags.StringVar(&pullOptions.Authfile, authfileFlagName, auth.GetDefaultAuthFile(), "Path of the authentication file. Use REGISTRY_AUTH_FILE environment variable to override")
 	_ = cmd.RegisterFlagCompletionFunc(authfileFlagName, completion.AutocompleteDefault)
 
-	decryptionKeysFlagName := "decryption-key"
-	flags.StringSliceVar(&pullOptions.DecryptionKeys, decryptionKeysFlagName, nil, "key needed to decrypt the image")
-
 	if !registry.IsRemote() {
 		certDirFlagName := "cert-dir"
 		flags.StringVar(&pullOptions.CertDir, certDirFlagName, "", "`Pathname` of a directory containing TLS certificates and keys")
@@ -159,13 +155,6 @@ func imagePull(cmd *cobra.Command, args []string) error {
 		pullOptions.Username = creds.Username
 		pullOptions.Password = creds.Password
 	}
-
-	decConfig, err := util.DecryptConfig(pullOptions.DecryptionKeys)
-	if err != nil {
-		return fmt.Errorf("unable to obtain decryption config: %w", err)
-	}
-	pullOptions.OciDecryptConfig = decConfig
-
 	// Let's do all the remaining Yoga in the API to prevent us from
 	// scattering logic across (too) many parts of the code.
 	var errs utils.OutputErrors
